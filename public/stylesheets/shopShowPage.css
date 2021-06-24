@@ -1,0 +1,100 @@
+a{
+    text-decoration: none;
+}
+
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+.nav-brand{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.container{
+    max-width: 1024px;
+
+    margin: auto;
+}
+.d-flex{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.justify-between{
+    justify-content: space-between;
+}
+
+.text-center{
+    text-align:center;
+}
+
+.border-shadow{
+    border:1px solid var(--border-btn);
+    box-shadow: 1px 3px 10px #e9ecef;
+}
+
+.inline{
+    display: inline-block;
+}
+.text-light{
+    color: var(--light);
+}
+
+#header nav{
+    background-color: aquamarine;
+    padding : 10px;
+    width: 100%;
+}
+
+#site-main{
+    margin-top: 6em;
+    /* margin-left: 440px; */
+    font-family: 'Barlow',sans-serif;
+}
+
+#site-main .container .box-nav> a{
+    font-size: 1em;
+    padding: .5em 1em;
+
+}
+
+#site-main .container form{
+    margin: 2em 0;
+}
+
+.table{
+    border-spacing: 0;
+    width:100%;
+}
+
+.table td,.table th{
+    padding: .75em;
+    vertical-align: top;
+    text-align: center;
+    border-top: 1px solid ;
+}
+
+.table td> a.btn{
+    padding:.3em 1em;
+    font-size: 1.1em;
+    margin: .2em;
+}
+
+.table tr:hover{
+    background-color: #06d6a0;
+    cursor: pointer;
+}
+
+.table tr:hover td> a{
+    box-shadow: none;
+}
+
+.table .thead-dark th{
+    color: black;
+    background-color:rgb(44, 168, 218);
+    border-color: #32383e;
+}
+
+

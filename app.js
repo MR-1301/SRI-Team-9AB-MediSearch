@@ -208,7 +208,7 @@ app.get("/shop/stock", async (req, res) => {
   const shopID = req.user.shopInfo;
   const shop = await Shop.findById(shopID).populate("stockInfo");
   const meds = shop.stockInfo.medicine;
-  res.render("./Shop/stock", {meds});
+  res.render("./Shop/showPage", {meds});
 });
 
 app.get("/shop/stock/new", (req, res) => {
