@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/shopShowPage.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+<div class="box-nav d-flex justify-between mb-3">
+    <a href="/shop/stock/new" class="border-shadow ">
+        <span class=" text-gradient">Add Data <i class="fas fa-plus-square"></i> </span>
+    </a>
+</div>
+
+<form action="/" method="POST">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Med-Name</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+            <th>Description</th>
+            <th>Update/Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <% meds.forEach(med=>{ %>
+        <tr>
+            <td><%= med.name %></td>
+            <td><%= med.quantity %></td>
+            <td><%= med.price %></td>
+            <td><%= med.description %></td>
+            <td>
+                <a href="/update" class="btn border-shadow update">
+                    <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
+
+                </a>
+                <a class="btn border-shadow delete">
+                    <span class="text-gradient"><i class="fas fa-trash-alt"></i></span>
+
+                </a>
+
+            </td>
+        </tr>
+        <% }) %>
+
+        </tbody>
+    </table>
+</form>
+
