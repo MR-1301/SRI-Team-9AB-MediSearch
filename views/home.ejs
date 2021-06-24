@@ -1,0 +1,10 @@
+<% layout('layouts/boilerplate') %>
+<% if(currentUser) { %>
+    <h1>
+        <% if(currentUser.position == 0) { %>
+            Welcome User "<%= currentUser.name %>"
+        <% } else { %>
+            Welcome Shop Owner "<%= currentUser.name %>"
+        <% } %>
+    </h1>
+<% } %>

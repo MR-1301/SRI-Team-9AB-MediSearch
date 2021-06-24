@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/upload.css">
+
+<div class="bg-image"></div>
+<div class="bg-text">
+    <h2>Upload stock</h2>
+    <form action="/shop/stock/excel" enctype="multipart/form-data" method="POST">
+        <span id="custom-text">Select a file:</span>
+        <input type="file" id="myfile" name="upload" />
+        <br><br>
+        <button >Submit</button>
+    </form>
+
+    <form action="/shop/stock/manual" method="post">
+        <h2 class="manual">Update stock manually</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="name" placeholder="Medicine Name">
+                </div>
+                <div class="col">
+                    <input type="text" name="description" placeholder="Description">
+                </div>
+                <div class="col">
+                    <input type="number" name="quantity" placeholder="Quantity">
+                </div>
+                <div class="col">
+                    <input type="text" name="price" placeholder="MRP per tablet">
+                </div>
+            </div>
+
+            <button>Add</button>
+        </div>
+    </form>
+</div>
+<script src="/javascript/upload.js"></script>

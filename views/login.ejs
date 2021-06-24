@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="stylesheets/login.css">
+
+<div class="logbox">
+    <img src="imagesIcons/loginImage.jpg" alt="" class="avatar">
+    <h1>LogIn</h1>
+
+    <div>
+        <form action="/login" METHOD="POST">
+            <p>Username</p>
+            <input type="text" name="username" placeholder="Enter your Username">
+            <p>Password</p>
+            <input id="password" type="password" name="password" placeholder="Enter password">
+            <i class="bi bi-eye-slash" id="togglePassword"></i>
+            <button class="btn btn-success btn-block">Login</button>
+        </form>
+    </div>
+
+    <div class="or">OR</div>
+
+    <div>
+        <form action="/auth/google" method="get">
+            <button class="social-signin google">Log in with Google+</button>
+        </form>
+    </div>
+</div>
+<script src="/javascript/login.js"></script>

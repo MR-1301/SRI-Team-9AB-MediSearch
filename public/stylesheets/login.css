@@ -1,0 +1,124 @@
+body{
+    margin:0;
+    padding:0;
+    background: url("/imagesIcons/hush-naidoo-yo01Z-9HQAw-unsplash.jpg");
+    background-size:cover;
+    background-position: center;
+    font-family:sans-serif;
+}
+.logbox{
+    width:320px;
+    height:450px;
+    background:black;
+    color:#fff;
+    top:60%;
+    left:50%;
+    position:absolute;
+    transform: translate(-50%,-50%);
+    box-sizing:border-box;
+    padding:70px 30px;
+}
+.avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    position:absolute;
+    top:-40px;
+
+    left:35%;
+}
+
+h1{
+    margin:0;
+    padding:0 0 20px;text-align:center;
+    font-size:22px;
+}
+
+.logbox p{
+    margin:0;
+    padding:0;
+    font-weight:bold;
+}
+.logbox input{
+    width:100%;
+    margin-bottom:20px;
+}
+.logbox input[type="text"] , input[type="password"]
+{
+    border:none;
+    border-bottom: 1px solid #fff;
+    background:transparent;
+    outline:none;
+    height:40px;
+    color:white;
+    font-size: 16px;
+}
+.logbox input[type="submit"]
+{
+    border:none;
+    outline:none;
+    height:40px;
+    background:red;
+    color:#fff;
+    font-size:18px;
+    border-radius: 20px;
+}
+.logbox input[type="submit"]:hover
+{
+    cursor:pointer;
+    background:#ffc107;
+    color:#000;
+}
+.logbox i{
+    margin-left:-30px;
+    cursor:pointer;
+    color:white;
+}
+
+button.social-signin {
+    margin-bottom: 20px;
+    width: 100%;
+    height: 36px;
+    border: none;
+    border-radius: 2px;
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+button.social-signin:hover,
+button.social-signin:focus {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: 0.2s ease;
+}
+
+button.social-signin:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    transition: 0.2s ease;
+}
+
+button.social-signin.facebook {
+    background: #32508E;
+}
+
+button.social-signin.twitter {
+    background: #55ACEE;
+}
+
+button.social-signin.google {
+    background: #DD4B39;
+}
+
+.or {
+    color: black;
+    margin: 10px auto;
+    width: 40px;
+    height: 40px;
+    background: #DDD;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    line-height: 40px;
+    text-align: center;
+}
