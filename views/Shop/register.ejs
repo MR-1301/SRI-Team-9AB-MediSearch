@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/shopReg.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"/>
+<div id="login-box">
+    <div class="left">
+        <h1>Sign up</h1>
+        <form action="/shop/register" method="post">
+            <input type="text" name="username" placeholder="pick a username" required/>
+            <input type="text" name="shopName" placeholder="Shopname" required/>
+            <input type="text" name="owName" placeholder="Owner's name" required/>
+            <input type="text" name="shopPhoneNumber" placeholder="Shop Phone Number" required/>
+            <input type="text" name="email" placeholder="E-mail" required/>
+            <input type="text" name="aadharCardNo" placeholder="Aadhar Card Number" required/>
+            <input type="text" name="address" placeholder="Address" required/>
+            <input type="number" name="pincode" placeholder="Pincode" required/>
+            <input type="text" name="licenceNo" placeholder="License" required/>
+            <input type="password" name="password" placeholder="Password" required/>
+            <i class="bi bi-eye-slash" id="togglePassword"></i>
+            <input type="submit" name="" value="Sign Me up">
+        </form>
+    </div>
+</div>
+<script src="/javascript/login.js"></script>
