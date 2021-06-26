@@ -23,26 +23,28 @@
         </thead>
         <tbody>
 
-        <% meds.forEach(med=>{ %>
-        <tr>
-            <td><%= med.name %></td>
-            <td><%= med.quantity %></td>
-            <td><%= med.price %></td>
-            <td><%= med.description %></td>
-            <td>
-                <a href="/update" class="btn border-shadow update">
-                    <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
+        <% if (meds){ %>
 
-                </a>
-                <a class="btn border-shadow delete">
-                    <span class="text-gradient"><i class="fas fa-trash-alt"></i></span>
+            <% meds.forEach(med=>{ %>
+                <tr>
+                    <td><%= med.name %></td>
+                    <td><%= med.quantity %></td>
+                    <td><%= med.price %></td>
+                    <td><%= med.description %></td>
+                    <td>
+                        <a href="/update" class="btn border-shadow update">
+                            <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
 
-                </a>
+                        </a>
+                        <a class="btn border-shadow delete">
+                            <span class="text-gradient"><i class="fas fa-trash-alt"></i></span>
 
-            </td>
-        </tr>
-        <% }) %>
+                        </a>
 
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
         </tbody>
     </table>
 </form>

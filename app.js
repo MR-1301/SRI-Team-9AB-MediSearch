@@ -207,7 +207,9 @@ app.get("/shop/stock", async (req, res) => {
     return res.send("Shop Owner Not Authenticated!");
   const shopID = req.user.shopInfo;
   const shop = await Shop.findById(shopID).populate("stockInfo");
-  const meds = shop.stockInfo.medicine;
+  let meds;
+  if(shop.stockInfo)
+  meds= shop.stockInfo.medicine;
   res.render("./Shop/showStock", {meds});
 });
 
