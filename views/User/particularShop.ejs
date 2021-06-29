@@ -1,5 +1,52 @@
 <% layout('layouts/boilerplate') %>
-<h1>
-    <%= shopName %>
-</h1>
-<%= meds %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/particularShop.css">
+
+<div class="box">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    <input type="text" name="" id="myInput" placeholder="Search Medicine">
+</div>
+
+<div class="badge bg-secondary text-wrap totalBtn" style="width: 6rem;">
+    Total: <span id="finalTotal">0</span>
+</div>
+
+<table class="table table-dark table-striped mystyle" id="myTable">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Medicine Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col"> Total Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for (let i = 0;i < meds.length;i++){ %>
+        <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= meds[i].name %></td>
+            <% const medPriceID = `price${i + 1}` %>
+            <td id="<%= medPriceID %>"><%= meds[i].price %></td>
+            <td>
+                <div class="quantity">
+                    <% const plusBtn = `plus${i + 1}` %>
+                    <% const minusBtn = `minus${i + 1}` %>
+                    <% const inputxt = `input${i + 1}` %>
+                    <button class="btn minus-btn diabled" id="<%= minusBtn %>" type="button">-</button>
+                    <input type="text" class="qty" value="0" id="<%= inputxt %>">
+                    <button class="btn plus-btn" type="button" id="<%= plusBtn %>">+</button>
+                </div>
+            </td>
+            <% const totalPrice = `total${i + 1}` %>
+            <td id="<%= totalPrice %>">
+                0
+            </td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+<script>
+  const allMeds =<%- JSON.stringify(meds) %>;
+</script>
+<script src="/javascript/particularShop.js"></script>
