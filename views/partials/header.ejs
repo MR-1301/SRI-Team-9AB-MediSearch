@@ -21,7 +21,7 @@
                     <a class="nav-link" href="/user/register">UserRegister</a>
                 </li>
             <% } else { %>
-                    <% if(currentUser.position == 1){ %>
+                <% if(currentUser.position == 1){ %>
                     <li class="nav-item 3">
                         <a class="nav-link" href="/shop/stock">Stock</a>
                     </li>
@@ -29,6 +29,13 @@
                         <a class="nav-link" href="/shop/stock/new">Add Stock</a>
                     </li>
                 <% } %>
+
+                <% if(currentUser.position == 0){ %>
+                    <li class="nav-item 3">
+                        <a class="nav-link" href="/user/shops">All Shops</a>
+                    </li>
+                <% } %>
+
                 <li class="nav-item 3">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>

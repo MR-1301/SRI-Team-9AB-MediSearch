@@ -207,7 +207,9 @@ app.get("/shop/stock", async (req, res) => {
     return res.send("Shop Owner Not Authenticated!");
   const shopID = req.user.shopInfo;
   const shop = await Shop.findById(shopID).populate("stockInfo");
-  const meds = shop.stockInfo.medicine;
+  let meds;
+  if (shop.stockInfo)
+    meds = shop.stockInfo.medicine;
   res.render("./Shop/showStock", {meds});
 });
 
@@ -217,8 +219,8 @@ app.get("/shop/stock/new", (req, res) => {
 
 app.post("/shop/stock/manual", async (req, res) => {
   //newMeds is array of new medicines
-  const {name,quantity,description,price} = req.body;
-  const newMeds={name,quantity,description,price};
+  const {name, quantity, description, price} = req.body;
+  const newMeds = {name, quantity, description, price};
   console.log(newMeds);
   if (!req.user)
     return res.redirect('/login');
@@ -260,6 +262,7 @@ app.post('/shop/stock/excel', upload.single("upload"), async (req, res) => {
   
   if (!req.user)
     return res.redirect('/login');
+  
   if (req.user.position !== 1)
     return res.send("Shop Owner Not Authenticated!");
   
@@ -290,6 +293,25 @@ app.post('/shop/stock/excel', upload.single("upload"), async (req, res) => {
   
   await stock.save();
   res.redirect('/shop/stock');
+});
+
+app.get('/user/shops', async (req, res) => {
+  const shops = await Shop.find();
+  if (!req.user)
+    res.redirect('/login');
+  
+  if (req.user.position == 1)
+    return res.redirect('/shop/stock');
+  
+  res.render('./User/allShops', {shops});
+});
+
+app.get('/user/viewShop/:ShopId', async (req, res) => {
+  const currentShop = await Shop.findById(req.params.ShopId);
+  const shopName = currentShop.name;
+  const stockOfCS = await Stock.findById(currentShop.stockInfo);
+  const meds = stockOfCS.medicine;
+  res.render('./User/particularShop', {shopName, meds})
 });
 
 const port = process.env.PORT || 4000;
