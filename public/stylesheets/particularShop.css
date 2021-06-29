@@ -1,0 +1,111 @@
+body{
+	background: linear-gradient(25deg, #8600b3 50%, #cc33ff 50%);
+}
+.box{
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+	width: 500px;
+
+	height: 50px;
+
+	background-color: white;
+
+	border-radius: 30px;
+    margin:auto;
+    margin-top:10px;
+	display: flex;
+
+	align-items: center;
+
+	padding: 20px;
+
+}
+.box > i {
+
+	font-size: 20px;
+
+	color: #777;
+
+}
+
+.box > input{
+
+	flex: 1;
+
+	height: 40px;
+
+	border: none;
+
+	outline: none;
+
+	font-size: 18px;
+
+	padding-left: 10px;
+
+
+}
+
+.mystyle{
+    margin-top:10px;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700,900|Open+Sans:300,400|Oswald:400,700');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    font-weight: normal;
+}
+
+
+
+/***************/
+
+.quantity {
+    display: flex;
+    justify-content: center;
+     width:40px;
+
+}
+
+.quantity button {
+    width: 50px;
+    height: 35px;
+    border: 1px solid #000;
+    color: #000;
+    border-radius: 0;
+    background: #fff
+}
+
+.quantity input {
+    border: none;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    text-align: center;
+    width: 50px;
+    font-size: 20px;
+    color: #000;
+    font-weight: 300;
+}
+
+.total-price {
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+}
+
+.total-price .fa-rupee {
+    display: inline-block;
+    font-size: 90%;
+    margin-right: 5px;
+}
+
+.totalBtn{
+    height: 30px;
+    margin-left: 40%;
+    margin-top: 10px;
+    padding-top: 7px;
+}
