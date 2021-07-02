@@ -314,5 +314,41 @@ app.get('/user/viewShop/:ShopId', async (req, res) => {
   res.render('./User/particularShop', {shopName, meds})
 });
 
+app.get('/user/searchMedicine', async (req, res) => {
+  let allMedicines = [];
+  
+  const allShops = await Shop.find();
+  
+  for (let shop of allShops) {
+    const stockInShop = await Stock.findById(shop.stockInfo);
+    const medsInShop = stockInShop.medicine;
+    for (let particularMed of medsInShop) {
+      allMedicines.push({
+        shopId: shop._id,
+        shopName: shop.name,
+        medicineName: particularMed.name,
+        medicineQuantity: particularMed.quantity
+      });
+    }
+  }
+  
+  allMedicines.sort((a, b) => {
+    if (a.medicineName == b.medicineName) {
+      if (a.medicineQuantity > b.medicineQuantity)
+        return -1;
+      return 1;
+    }
+    if (a.medicineName < b.medicineName) {
+      return -1;
+    }
+    if (a.medicineName > b.medicineName) {
+      return 1;
+    }
+    return 0;
+  });
+  
+  res.render('./User/allMedicineSearch', {allMedicines});
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

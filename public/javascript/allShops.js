@@ -11,7 +11,7 @@ document.getElementById("myInput").addEventListener("keyup",function()
         if(td)
         {
             let textvalue=td.textContent || td.innerHTML;
-            if(textvalue.toUpperCase().indexOf(filter)>-1)
+            if(textvalue.toUpperCase().indexOf(filter)> -1)
             {
                 tr[i].style.display="";
             }             
