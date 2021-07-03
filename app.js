@@ -326,6 +326,7 @@ app.get('/user/searchMedicine', async (req, res) => {
       allMedicines.push({
         shopId: shop._id,
         shopName: shop.name,
+        shopAddress: shop.address,
         medicineName: particularMed.name,
         medicineQuantity: particularMed.quantity
       });
