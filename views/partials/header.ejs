@@ -28,6 +28,15 @@
                     <li class="nav-item 3">
                         <a class="nav-link" href="/shop/stock/new">Add Stock</a>
                     </li>
+                    <li>
+                        <a class="nav-link" href="/shop/offlineOrder">Offline Order</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/shop/pendingOrders">Pending Orders</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/shop/confirmedOrders">Confrimed Orders</a>
+                    </li>
                 <% } %>
 
                 <% if(currentUser.position == 0){ %>
@@ -36,6 +45,9 @@
                     </li>
                     <li class="nav-item 3">
                         <a class="nav-link" href="/user/searchMedicine">Search Meds</a>
+                    </li>
+                    <li class="nav-item 3">
+                        <a class="nav-link" href="/user/orders">Orders</a>
                     </li>
                 <% } %>
 

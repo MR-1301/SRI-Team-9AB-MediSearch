@@ -1,0 +1,103 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+/* body{
+    height:100%;
+    width:100%;
+    background-size: contain;
+    background-image: url('wilhelm-gunkel-h4KYT7X1HM4-unsplash.jpg');
+    background-position: center;
+    position: absolute;
+    overflow: hidden;
+    opacity: 1;
+    z-index: -3;
+
+} */
+.table{
+    
+    width:100%;
+    border-spacing: 0;
+    margin-top:25px;
+    
+}
+.shopName{
+    /* margin-top: 40px; */
+    /* width:100%; */
+    text-align: right;
+    padding:24px;
+    color:rgb(196, 118, 247);
+    font-size: 25px;
+}
+
+.table td,.table th{
+    padding: .75em;
+    vertical-align: top;
+    text-align: center;
+    /* border-top: 1px solid ; */
+}
+
+
+.table tbody tr:hover{
+    background-color: #06d6a0;
+    cursor: pointer;
+}
+
+.subtotal{
+    width:100%;
+    align-items: center;
+    text-align: center;
+    font-size: 300px;
+}
+
+header{
+    width:100%;
+    align-items: center;
+    text-align: center;
+    margin:auto;
+    height:50px;
+   padding: 10px;
+    background: linear-gradient(to left,#eb7a83,#6fe2eb)
+}
+.table thead{
+    color:rgb(0, 0, 0);
+    /* background-color: rgb(69, 168, 226); */
+    background: linear-gradient(to left,#93d6fd,#ea8ef7);
+    font-size: 20px;
+    font-family: sans-serif;
+    width:100%;
+}
+
+.subtotal ul{
+    margin-top: 55px;
+    
+}
+.table tbody tr td{
+    color:rgb(0, 0, 0);
+    font-family: sans-serif  ;
+    font-size: 17px;
+   
+  
+   
+}
+
+
+.subtotal{
+    font-size: 20px;
+    /* color: linear-gradient(to left, #bf234b,#93d6fd); */
+    color: red;
+}
+
+#pay-btn{
+    color:red;
+    background-color: rgb(151, 230, 226);
+    border-radius: 5px;
+    width:120px;
+   margin-top: 40px;
+    margin-left: 650px;
+    align-items: center;
+    cursor: pointer;
+    height: 60px;
+}
+

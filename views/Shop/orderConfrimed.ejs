@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/shopOrders.css">
+
+
+<header>
+    <h1>Confirmed Orders </h1>
+</header>
+
+
+<div class="search mb-4">
+    <input class="search-txt" type="text" placeholder="Search for token..." id="search" onkeyup="search()">
+    <a class="search-btn" href="#"> </a>
+    <i id='boot' class="fas fa-search"></i>
+</div>
+
+<% for (var i = 0;i < shopOrder.length;i++)  { %>
+    <% if(shopOrder[i].deliveryStatus == 1){ %>
+        <table class="table1">
+            <thead>
+            <tr>
+                <th>Token Number #<%= shopOrder[i].token %></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                    <button class="btn-detail"><a href="/orderDetails/<%= shopOrder[i]._id %>">View Details</a>
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>Customer Name</td>
+                <td>Total Items</td>
+                <td>Date</td>
+                <td>Cost</td>
+                <td>Status</td>
+            </tr>
+            <tr>
+                <td>
+                    <%= customerName[i] %>
+                </td>
+                <td><%= shopOrder[i].orderInfo.length %></td>
+                <td><%= shopOrder[i].date %></td>
+                <td><%= shopOrder[i].totalCost %></td>
+                <td>
+                    <form action="/shop/changeStatus/<%= shopOrder[i]._id %>" method="post">
+                        <input type="hidden" name="next" value="pendingOrders">
+                        <button id="btn-send">Mark Pending</button>
+                    </form>
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    <% } %>
+<% } %>
+

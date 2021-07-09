@@ -1,0 +1,126 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="/stylesheets/orderHistory.css">
+
+
+<header>
+    <button>
+        <h2><a style="text-decoration: none; color: red " href="/">Go Back</a>
+        </h2>
+    </button>
+    <h1>Order History</h1>
+</header>
+
+<div class="search">
+
+    <input class="search-txt" type="text" placeholder="Search..." id="search" onkeyup="search()">
+    <a class="search-btn" href="#"> </a>
+    <i id='boot' class="fas fa-search"></i>
+
+</div>
+
+<div>
+    <select id="select">
+        <option value="0">Shop Name</option>
+        <option value="1">Items</option>
+        <option value="2">Date</option>
+        <option value="3">Cost</option>
+        <option value="4">Token Number</option>
+    </select>
+</div>
+
+<div class="orders">
+    Total Orders: <%= userOrders.length %>
+</div>
+<main>
+    <% for (var i = 0 ;i < userOrders.length ;i++){ %>
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>Token No: #<%= userOrders[i].token %></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                    <button class="btn-detail"><a href="/orderDetails/<%= userOrders[i]._id %>">View Details</a>
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Delivered</td>
+                <td>Shop Name</td>
+                <td>Total Items</td>
+                <td>Date</td>
+                <td>Cost</td>
+            </tr>
+            <tr>
+                <% if(userOrders[i].deliveryStatus){ %>
+                    <td>Yes</td>
+                <% }else{ %>
+                    <td>No</td>
+                <% } %>
+                <td><%= shopName[i] %></td>
+                <td><%= userOrders[i].orderInfo.length %></td>
+                <td><%= userOrders[i].date %></td>
+                <td><%= userOrders[i].totalCost %></td>
+            </tr>
+            </tbody>
+        </table>
+
+    <% } %>
+</main>
+
+
+<script>
+  const search = () => {
+    let data = document.getElementById("search").value.toUpperCase();
+    let tab1 = document.getElementsByClassName("table");
+    var k = parseInt(document.getElementById('select').value);
+    console.log(k);
+    for (var j = 0; j < 12; j++) {
+
+      let tabHead = tab1[j].getElementsByTagName('th')
+      let tabRow = tab1[j].getElementsByTagName('tr')
+      console.log(tabRow)
+      if (k == 4) {
+        let tabData = tabRow[0].getElementsByTagName('th')[0];
+        if (tabData) {
+          let final = tabData.textContent || tabData.innerHTML;
+          if (final.toUpperCase().indexOf(data) > -1) {
+            tabRow[0].style.display = "";
+            tab1[j].style.display = ""
+          } else {
+
+            tab1[j].style.display = "none";
+          }
+        }
+
+      } else {
+
+        for (var i = 2; i < 3; i++) {
+
+
+          let tabData = tabRow[i].getElementsByTagName("td")[k];
+
+          if (tabData) {
+            let final = tabData.textContent || tabData.innerHTML;
+            if (final.toUpperCase().indexOf(data) > -1) {
+              // tabRow[i].style.display ="";
+              tab1[j].style.display = ""
+            } else {
+
+              tab1[j].style.display = "none";
+            }
+          }
+
+        }
+      }
+    }
+
+  }
+
+</script>

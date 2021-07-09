@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/orderDetail.css">
+<% if(currentUser.position == 1){ %>
+<div class="box1">
+    <%=nameOfUser %>
+</div>
+<% }else{ %>
+<div class="box1">
+    <%=nameOfShop %>
+</div>
+<% } %>
+<table class="table table-dark table-striped mystyle" id="myTable">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Medicine Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col"> Total Price</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <% for(let i = 0;i < orderDet.orderInfo.length;i++){ %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td><%= orderDet.orderInfo[i].medName %></td>
+            <td><%= orderDet.orderInfo[i].medPrice %></td>
+            <td><%= orderDet.orderInfo[i].medQuantity %></td>
+            <td><%= parseInt(orderDet.orderInfo[i].medPrice) * parseInt(orderDet.orderInfo[i].medQuantity) %></td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>

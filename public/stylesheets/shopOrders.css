@@ -1,0 +1,161 @@
+header{
+    /* background: linear-gradient(to left,#eff5d1,#c3f39c); */
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    color:rgb(241, 61, 37);
+    font-size: 25px;
+}
+
+
+body{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background: url('/imagesIcons/scott-webb-UjupleczBOY-unsplash.jpg')
+    repeat fixed 100%;
+
+
+}
+
+
+.table1{
+
+    width:80%;
+    border-spacing: 0;
+    padding:30px;
+    margin:auto;
+
+}
+
+.table1 tbody{
+    background-color: rgb(46,53,64);
+    color: white;
+}
+
+.table1 td,.table1 th{
+    padding: .75em;
+    vertical-align: top;
+    text-align: center;
+    /* border-top: 1px solid ; */
+}
+
+
+.table1 thead{
+    color:rgb(0, 0, 0);
+    /* background-color: rgb(69, 168, 226); */
+    background: linear-gradient(to left,#cde8f8,#f7dcd6);
+    font-size: 17px;
+    font-family: sans-serif;
+    width:100%;
+    text-align: left;
+}
+
+.table1 tbody tr td{
+    font-size:15px;
+}
+
+
+.table2{
+
+    width:80%;
+    border-spacing: 0;
+    padding:30px;
+    margin:auto;
+
+}
+
+.table2 tbody{
+    background-color: rgb(46,53,64);
+    color: white;
+}
+
+.table2 td,.table2 th{
+    padding: .75em;
+    vertical-align: top;
+    text-align: center;
+    /* border-top: 1px solid ; */
+}
+
+
+.table2 thead{
+    color:rgb(0, 0, 0);
+    /* background-color: rgb(69, 168, 226); */
+    background: linear-gradient(to left,#cde8f8,#f7dcd6);
+    font-size: 17px;
+    font-family: sans-serif;
+    width:100%;
+    text-align: left;
+}
+
+.table2 tbody tr td{
+    font-size:15px;
+}
+
+
+.btn-detail{
+    border-radius: 5px;
+    color:blue;
+
+}
+
+.btn-detail:hover{
+    color:red;
+    cursor: pointer;
+}
+
+.search{
+    position: relative;
+    display: flex;
+    margin: 30px 500px;
+    margin-top: 50px;
+    margin-bottom: 1px;
+    background:linear-gradient(to left,#cdfaf6,white);
+
+    height: 40px;
+    border-radius: 40px;
+    padding: 10px;
+    width:470px;
+
+}
+
+.search-btn{
+    color:#e84118;
+    float:right;
+    width: 40px;
+    height:40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.search-txt{
+    border:none;
+    background: none;
+    outline:none;
+    float:left;
+    color:rgb(0, 0, 0);
+    padding: 0;
+    font-size: 16px;
+    width:400px;
+
+}
+
+#boot{
+    margin-top:10px;
+}
+
+#select{
+    font-family: sans-serif;
+    font-size:20px;
+    align-items: center;
+    margin-left: 1050px;
+    margin-top:-46px;
+    background: linear-gradient(to left , #e9f5f8,#edf3c5);
+    cursor: pointer;
+}
+
+.orders{
+    font-size: 32px;
+}

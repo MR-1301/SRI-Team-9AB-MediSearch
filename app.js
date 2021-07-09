@@ -34,6 +34,7 @@ const upload = multer({storage: storage});
 const User = require('./models/User');
 const Shop = require('./models/Shop');
 const Stock = require('./models/Stock');
+const UserOrder = require('./models/userOrder');
 
 //connecting to mongoose
 const dbURI = process.env.DBURI;
@@ -43,7 +44,6 @@ mongoose
     console.log("DB connected!!")
   })
   .catch((err) => console.error({err}));
-
 
 //ejs things
 const ejsMate = require("ejs-mate");
@@ -136,7 +136,6 @@ app.get("/logout", async (req, res, next) => {
   res.redirect('/');
 });
 
-
 app.get('/auth/google', passport.authenticate('google', {scope: "profile email"}))
 
 //callback from google API
@@ -152,22 +151,15 @@ app.get('/auth/google/callback', passport.authenticate('google', {failureRedirec
   }
 });
 
-app.get('/user/register', (req, res) => {
-  res.render('./User/register');
-})
-
-app.post('/user/register', async (req, res, next) => {
-  User.findOne({username: req.body.username}, async (err, doc) => {
-    if (err) throw err;
-    if (doc) res.send("User Already Exists");
-    if (!doc) {
-      const {username, name, email, password, mobileNo, aadharCardNo} = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({username, password: hashedPassword, name, email, mobileNo, aadharCardNo, position: 0});
-      await newUser.save();
-      res.redirect('/login');
-    }
-  });
+app.get('/orderDetails/:orderID', async (req, res) => {
+  const orderDet = await UserOrder.findById(req.params.orderID);
+  const Cuser = await User.findById(orderDet.userID);
+  const CShop = await Shop.findById(orderDet.shopID);
+  let nameOfUser = 'Offline';
+  if (Cuser)
+    nameOfUser = Cuser.name;
+  const nameOfShop = CShop.name;
+  res.render('./orderDetails', {orderDet, nameOfUser, nameOfShop});
 });
 
 app.get('/shop/register', (req, res) => {
@@ -191,13 +183,6 @@ app.post('/shop/register', async (req, res, next) => {
       res.redirect('/login');
     }
   });
-});
-
-app.get('/userData', (req, res, next) => {
-  if (req.user)
-    res.send(req.user);
-  else
-    res.json("You Must Login in First Boiii!!")
 });
 
 app.get("/shop/stock", async (req, res) => {
@@ -295,6 +280,123 @@ app.post('/shop/stock/excel', upload.single("upload"), async (req, res) => {
   res.redirect('/shop/stock');
 });
 
+let shopCurrentOrder = [];
+
+app.get('/shop/offlineOrder', async (req, res) => {
+  if (!req.user)
+    return res.redirect('/login');
+  if (req.user.position !== 1)
+    return res.send("Shop Owner Not Authenticated!");
+  shopCurrentOrder = [];
+  const shopID = req.user.shopInfo;
+  const shop = await Shop.findById(shopID).populate("stockInfo");
+  let meds;
+  if (shop.stockInfo)
+    meds = shop.stockInfo.medicine;
+  res.render("./Shop/offlineOrder", {meds, shopID});
+});
+
+app.post('/shop/placeOrder', async (req, res) => {
+  const medsIds = req.body.medID;
+  const Qty = req.body.quantity;
+  let orderInfo = [];
+  const shopID = req.user.shopInfo;
+  const currentShop = await Shop.findById(shopID);
+  const stockOfCS = await Stock.findById(currentShop.stockInfo);
+  const meds = stockOfCS.medicine;
+  for (let i = 0; i < medsIds.length; i++) {
+    let partMed = meds.find(obj => JSON.stringify(obj._id) === JSON.stringify(medsIds[i]));
+    if (Qty[i] > 0) {
+      orderInfo.push({
+        medName: partMed.name,
+        medPrice: partMed.price,
+        medQuantity: Qty[i]
+      });
+    }
+  }
+  shopCurrentOrder = orderInfo;
+  res.render('./Shop/proceedCart', {shopName: currentShop.name, orderInfo});
+});
+
+app.get('/shop/afterOfflineOrder', async (req, res) => {
+  let totalCost = 0;
+  for (let i = 0; i < shopCurrentOrder.length; i++) {
+    totalCost += parseInt(shopCurrentOrder[i].medPrice) * parseInt(shopCurrentOrder[i].medQuantity);
+  }
+  
+  const dateObj = new Date();
+  const month = dateObj.getMonth();
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const output = day + '-' + month + '-' + year;
+  
+  const newOrder = new UserOrder({
+    shopID: req.user.shopInfo,
+    orderInfo: currentOrder,
+    totalCost,
+    deliveryStatus: 1,
+    date: output,
+  });
+  console.log(newOrder);
+  await newOrder.save();
+  currentOrder = [];
+  res.render('./Shop/afterOrder')
+});
+
+app.get('/shop/pendingOrders', async (req, res) => {
+  const shopOrder = await UserOrder.find({shopID: req.user.shopInfo});
+  let customerName = [];
+  for (let i = 0; i < shopOrder.length; i++) {
+    const customer = await User.findById(shopOrder[i].userID);
+    if (customer)
+      customerName.push(customer.name);
+    else
+      customerName.push("Offline");
+  }
+  res.render('./Shop/orderPending', {shopOrder, customerName});
+});
+
+app.get('/shop/confirmedOrders', async (req, res) => {
+  const shopOrder = await UserOrder.find({shopID: req.user.shopInfo});
+  let customerName = [];
+  for (let i = 0; i < shopOrder.length; i++) {
+    const customer = await User.findById(shopOrder[i].userID);
+    if (customer)
+      customerName.push(customer.name);
+    else
+      customerName.push("Offline");
+  }
+  res.render('./Shop/orderConfrimed', {shopOrder, customerName});
+});
+
+app.post('/shop/changeStatus/:OrderID', async (req, res) => {
+  const ord = await UserOrder.findById(req.params.OrderID);
+  ord.deliveryStatus = 1 - ord.deliveryStatus;
+  await ord.save();
+  const next = req.body.next;
+  res.redirect(`/shop/${next}`);
+})
+
+let currentOrder = [];
+
+app.get('/user/register', (req, res) => {
+  res.render('./User/register');
+})
+
+app.post('/user/register', async (req, res, next) => {
+  User.findOne({username: req.body.username}, async (err, doc) => {
+    if (err) throw err;
+    if (doc) res.send("User Already Exists");
+    if (!doc) {
+      const {username, name, email, password, mobileNo, aadharCardNo} = req.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = new User({username, password: hashedPassword, name, email, mobileNo, aadharCardNo, position: 0});
+      await newUser.save();
+      res.redirect('/login');
+    }
+  });
+});
+
 app.get('/user/shops', async (req, res) => {
   const shops = await Shop.find();
   if (!req.user)
@@ -307,11 +409,12 @@ app.get('/user/shops', async (req, res) => {
 });
 
 app.get('/user/viewShop/:ShopId', async (req, res) => {
+  currentOrder = [];
   const currentShop = await Shop.findById(req.params.ShopId);
   const shopName = currentShop.name;
   const stockOfCS = await Stock.findById(currentShop.stockInfo);
   const meds = stockOfCS.medicine;
-  res.render('./User/particularShop', {shopName, meds})
+  res.render('./User/particularShop', {shopID: req.params.ShopId, shopName, meds})
 });
 
 app.get('/user/searchMedicine', async (req, res) => {
@@ -349,6 +452,75 @@ app.get('/user/searchMedicine', async (req, res) => {
   });
   
   res.render('./User/allMedicineSearch', {allMedicines});
+});
+
+app.post('/user/placeOrder/:ShopId', async (req, res) => {
+  const medsIds = req.body.medID;
+  const Qty = req.body.quantity;
+  let orderInfo = [];
+  const currentShop = await Shop.findById(req.params.ShopId);
+  const stockOfCS = await Stock.findById(currentShop.stockInfo);
+  const meds = stockOfCS.medicine;
+  for (let i = 0; i < medsIds.length; i++) {
+    let partMed = meds.find(obj => JSON.stringify(obj._id) === JSON.stringify(medsIds[i]));
+    if (Qty[i] > 0) {
+      orderInfo.push({
+        medName: partMed.name,
+        medPrice: partMed.price,
+        medQuantity: Qty[i]
+      });
+    }
+  }
+  currentOrder = orderInfo;
+  res.render('./User/proceedCart', {currentShop, orderInfo});
+});
+
+app.get('/user/paymentGateway/:ShopID', (req, res) => {
+  let totalCost = 0;
+  for (let i = 0; i < currentOrder.length; i++) {
+    totalCost += parseInt(currentOrder[i].medPrice) * parseInt(currentOrder[i].medQuantity);
+  }
+  totalCost = (totalCost * 105) / 100;
+  res.render('./User/paymentGateway', {totalCost, ShopID: req.params.ShopID});
+});
+
+app.post("/user/afterPlacingOrder/:ShopID", async (req, res) => {
+  let totalCost = 0;
+  for (let i = 0; i < currentOrder.length; i++) {
+    totalCost += parseInt(currentOrder[i].medPrice) * parseInt(currentOrder[i].medQuantity);
+  }
+  
+  const dateObj = new Date();
+  const month = dateObj.getMonth();
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const output = day + '-' + month + '-' + year;
+  
+  const newOrder = new UserOrder({
+    userID: req.user._id,
+    shopID: req.params.ShopID,
+    orderInfo: currentOrder,
+    totalCost,
+    deliveryStatus: 0,
+    date: output,
+  });
+  
+  newOrder.token = newOrder._id;
+  await newOrder.save();
+  currentOrder = [];
+  res.render('./User/afterOrder');
+});
+
+app.get("/user/orders", async (req, res) => {
+  let userOrders = await UserOrder.find({userID: req.user._id});
+  
+  let shopName = [];
+  
+  for (let i = 0; i < userOrders.length; i++) {
+    const shop = await Shop.findById(userOrders[i].shopID);
+    shopName.push(shop.name);
+  }
+  res.render('./User/orderHistory', {userOrders, shopName});
 });
 
 const port = process.env.PORT || 4000;

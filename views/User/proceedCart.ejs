@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="/stylesheets/proceedCart.css">
+
+<div>
+    <header>
+        <div>
+            <h1>Billing Page</h1>
+        </div>
+    </header>
+
+    <div class="shopName">
+        <h2>Shop Name : <%= currentShop.name %></h2>
+    </div>
+
+    <main>
+
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% for(var i = 0;i < orderInfo.length;i++){ %>
+                <% if(orderInfo[i].medQuantity > 0){ %>
+                    <tr>
+                        <td> <%= orderInfo[i].medName %> </td>
+                        <% const quantId = `quant${i}` %>
+                        <td id='<%= quantId %>'> <%= orderInfo[i].medQuantity %></td>
+                        <% const costId = `cost${i}` %>
+                        <td>
+                            <span><i class="fas fa-rupee-sign"></i></span>
+                            <span id="<%= costId %>"><%= orderInfo[i].medPrice %> </span>
+                        </td>
+                        <% const totalId = `total${i}` %>
+                        <td>
+                            <span><i class="fas fa-rupee-sign"></i></span>
+                            <span id="<%= totalId %>">0 </span>
+                        </td>
+                    </tr>
+                <% } %>
+            <% } %>
+
+            <tr>
+                <td><h3>SubTotal </h3></td>
+                <td></td>
+                <td></td>
+                <td>
+
+                    <span><i class="fas fa-rupee-sign"></i></span>
+                    <span id="subtotal"> <i></i></span>
+                </td>
+            </tr>
+            <tr>
+                <td><h3>GST</h3></td>
+                <td></td>
+                <td></td>
+                <td><h3>5%</h3></td>
+
+            </tr>
+
+            </tbody>
+        </table>
+
+
+        <div class="subTotal">
+            <span><i> <h3>Final Amount:  </h3></i></span>
+            <span><i class="fas fa-rupee-sign"></i></span>
+            <span id="fianlAmount"><i>    </i></span>
+
+        </div>
+
+        <button id='pay-btn'>
+            <h2><a href="/user/paymentGateway/<%= currentShop._id %>">Proceed To Pay<i
+                            class="fas fa-arrow-right"></i></a>
+            </h2>
+        </button>
+
+
+        <button id='pay-btn'>
+            <h2><a style="text-decoration: none; color: red " href="/user/viewShop/<%= currentShop._id %>">Go Back</a>
+            </h2>
+        </button>
+
+        <script>
+
+          let subTotal = 0;
+          const len = parseInt(JSON.stringify(<%= orderInfo.length %>));
+
+          function calulate() {
+            for (var i = 0; i < len; i++) {
+              if (!document.getElementById(`quant${i}`))
+                continue;
+              let q = parseInt(document.getElementById(`quant${i}`).innerText)
+              let c = parseInt(document.getElementById(`cost${i}`).innerText)
+              let final = q * c;
+              subTotal += final;
+              document.getElementById(`total${i}`).innerText = final;
+            }
+            document.getElementById('subtotal').innerText = `${subTotal}`
+            subTotal = (subTotal * 5) / 100 + subTotal;
+            document.getElementById('fianlAmount').innerText = `${subTotal}`
+
+          }
+
+          calulate();
+          console.log("funciton is running!")
+        </script>
+    </main>
+</div>
+
+
