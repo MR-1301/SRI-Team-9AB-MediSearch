@@ -248,7 +248,20 @@ app.post("/shop/stock/manual", async (req, res) => {
 app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   const fileName = req.file.filename;
   const newMeds1 = parser.parseXls2Json("./uploads/" + fileName);
-  const newMeds = newMeds1[0];
+  let newMeds = []
+  for (let i = 0; i < newMeds1[0].length; i++) {
+    let obj = {
+      name: newMeds1[0][i].name,
+      description: {
+        company: newMeds1[0][i].company,
+        mg: newMeds1[0][i].mg
+      },
+      quantity: newMeds1[0][i].quantity,
+      price: newMeds1[0][i].price
+    }
+    newMeds.push(obj);
+  }
+  
   console.log(newMeds);
   
   if (!req.user)
@@ -276,9 +289,11 @@ app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
         break;
       }
     }
-    if (i != stock.medicine.length)
-      stock.medicine[i].quantity += x.quantity;
-    else
+    if (i != stock.medicine.length) {
+      let q1 = parseInt(stock.medicine[i].quantity);
+      let q2 = parseInt(x.quantity);
+      stock.medicine[i].quantity = q1 + q2;
+    } else
       stock.medicine.push(x);
   }
   
