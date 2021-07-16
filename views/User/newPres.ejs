@@ -1,0 +1,13 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+    <h1 class="text-center">New Prescription</h1>
+    <div class="col-6 offset-3">
+        <form action="/user/newPres" method="POST" enctype="multipart/form-data">
+            <input type="file" class="mb-5 mt-5" id="image" name="image">
+            <div class="mb-3">
+                <button class="btn btn-success">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -16,11 +16,11 @@
 
 } */
 .table{
-    
+
     width:100%;
     border-spacing: 0;
     margin-top:25px;
-    
+
 }
 .shopName{
     /* margin-top: 40px; */
@@ -57,7 +57,7 @@ header{
     text-align: center;
     margin:auto;
     height:50px;
-   padding: 10px;
+    padding: 10px;
     background: linear-gradient(to left,#eb7a83,#6fe2eb)
 }
 .table thead{
@@ -71,7 +71,7 @@ header{
 
 .subtotal ul{
     margin-top: 55px;
-    
+
 }
 .table tbody tr td{
     color:rgb(0, 0, 0);
@@ -86,12 +86,12 @@ header{
     color: red;
 }
 
-#pay-btn{
+.pay-btn{
     color:red;
     background-color: rgb(151, 230, 226);
     border-radius: 5px;
     width:120px;
-   margin-top: 40px;
+    margin-top: 40px;
     margin-left: 650px;
     align-items: center;
     cursor: pointer;

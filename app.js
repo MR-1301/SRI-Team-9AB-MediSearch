@@ -11,14 +11,16 @@ const bodyParser = require('body-parser')
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy
 const bcrypt = require('bcryptjs');
+const {jsPDF} = require("jspdf");
+const {storage} = require('./config/cloudinary');
 // const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 //forExcelToMongoose
 const fs = require('fs');
 const parser = require("simple-excel-to-json");
 var multer = require("multer");
-
-const storage = multer.diskStorage({
+var multerEx = require('multer');
+const storageEx = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
   },
@@ -26,16 +28,15 @@ const storage = multer.diskStorage({
     cb(null, file.originalname); //Appending extension
   },
 });
-
-const upload = multer({storage: storage});
-
+const uploadEx = multerEx({storage: storageEx});
+const upload = multer({storage});
 
 //requiring models
 const User = require('./models/User');
 const Shop = require('./models/Shop');
 const Stock = require('./models/Stock');
 const UserOrder = require('./models/userOrder');
-
+const Prescription = require('./models/Prescription');
 //connecting to mongoose
 const dbURI = process.env.DBURI;
 mongoose
@@ -239,7 +240,7 @@ app.post("/shop/stock/manual", async (req, res) => {
   res.redirect('/shop/stock');
 });
 
-app.post('/shop/stock/excel', upload.single("upload"), async (req, res) => {
+app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   const fileName = req.file.filename;
   const newMeds1 = parser.parseXls2Json("./uploads/" + fileName);
   const newMeds = newMeds1[0];
@@ -332,15 +333,17 @@ app.get('/shop/afterOfflineOrder', async (req, res) => {
   
   const newOrder = new UserOrder({
     shopID: req.user.shopInfo,
-    orderInfo: currentOrder,
+    orderInfo: shopCurrentOrder,
     totalCost,
     deliveryStatus: 1,
     date: output,
   });
-  console.log(newOrder);
   await newOrder.save();
-  currentOrder = [];
-  res.render('./Shop/afterOrder')
+  const printOrder = shopCurrentOrder;
+  shopCurrentOrder = [];
+  const shopID = req.user.shopInfo;
+  const currentShop = await Shop.findById(shopID);
+  res.render('./Shop/afterOrder', {shopName: currentShop.name, orderInfo: printOrder, jsPDF});
 });
 
 app.get('/shop/pendingOrders', async (req, res) => {
@@ -376,6 +379,38 @@ app.post('/shop/changeStatus/:OrderID', async (req, res) => {
   const next = req.body.next;
   res.redirect(`/shop/${next}`);
 })
+
+app.get('/shop/prescription', async (req, res) => {
+  const prescriptions = await Prescription.find();
+  let userName = [];
+  for (let x of prescriptions) {
+    const userC = await User.findById(x.userID);
+    userName.push(userC.name);
+  }
+  res.render('./Shop/allPrescription', {prescriptions, userName});
+});
+
+app.get('/shop/prescription/:presID', async (req, res) => {
+  const prescription = await Prescription.findById(req.params.presID);
+  const userC = await User.findById(prescription.userID);
+  let shopName = [];
+  for (let x of prescription.comments) {
+    const shopC = await Shop.findById(x.commenterID);
+    shopName.push(shopC.name);
+  }
+  res.render('./Shop/particularPrescription', {prescription, userName: userC.name, shopName});
+});
+
+app.post('/shop/prescription/:presID', async (req, res) => {
+  let prescription = await Prescription.findById(req.params.presID);
+  const newComment = {
+    commenterID: req.user.shopInfo,
+    text: req.body.content
+  };
+  prescription.comments.push(newComment);
+  await prescription.save();
+  res.redirect(`/shop/prescription/${req.params.presID}`);
+});
 
 let currentOrder = [];
 
@@ -506,9 +541,14 @@ app.post("/user/afterPlacingOrder/:ShopID", async (req, res) => {
   });
   
   newOrder.token = newOrder._id;
+  const ToKeN = newOrder.token;
   await newOrder.save();
+  const orderInfo = currentOrder;
+  const customerName = req.user.name;
   currentOrder = [];
-  res.render('./User/afterOrder');
+  const currentShop = await Shop.findById(req.params.ShopID);
+  const shopName = currentShop.name;
+  res.render('./User/afterOrder', {orderInfo, customerName, shopName, ToKeN});
 });
 
 app.get("/user/orders", async (req, res) => {
@@ -521,6 +561,37 @@ app.get("/user/orders", async (req, res) => {
     shopName.push(shop.name);
   }
   res.render('./User/orderHistory', {userOrders, shopName});
+});
+
+app.get('/user/prescription', async (req, res) => {
+  const prescriptions = await Prescription.find({userID: req.user._id});
+  // return res.send(prescriptions);
+  res.render('./User/allPrescription', {prescriptions});
+});
+
+app.get('/user/prescription/:presID', async (req, res) => {
+  const prescription = await Prescription.findById(req.params.presID);
+  let shopName = [];
+  for (let x of prescription.comments) {
+    const shopC = await Shop.findById(x.commenterID);
+    shopName.push(shopC.name);
+  }
+  console.log(shopName);
+  res.render('./User/particularPrescription', {prescription, shopName});
+});
+
+app.get('/user/newPres', async (req, res) => {
+  res.render('./User/newPres');
+});
+
+app.post('/user/newPres', upload.single('image'), async (req, res) => {
+  const pres = new Prescription({
+    imageURL: req.file.path,
+    userID: req.user._id,
+    comments: []
+  });
+  const obj = await pres.save();
+  res.redirect('/user/prescription');
 });
 
 const port = process.env.PORT || 4000;
