@@ -42,6 +42,10 @@ for (let i = 0; i < allMeds.length; i++) {
     
     valueCount++;
     document.getElementById(inputID).value = valueCount;
+    if(valueCount==parseInt(allMeds[i].quantity))
+    {
+      document.getElementById(plusID).setAttribute("disabled", "disabled");
+    }
     
     if (valueCount >= 1) {
       document.getElementById(minusID).removeAttribute("disabled");
@@ -58,6 +62,12 @@ for (let i = 0; i < allMeds.length; i++) {
     valueCount--;
     document.getElementById(inputID).value = valueCount;
     
+    if(valueCount==parseInt(allMeds[i].quantity)-1)
+    {
+      document.getElementById(plusID).removeAttribute("disabled");
+      document.getElementById(plusID).classList.remove("disabled")
+    }
+    
     if (valueCount == 0) {
       document.getElementById(minusID).setAttribute("disabled", "disabled")
     }
@@ -66,6 +76,7 @@ for (let i = 0; i < allMeds.length; i++) {
   })
   
 }
+
 
 
 

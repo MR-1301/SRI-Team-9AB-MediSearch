@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/upload.css">
+
+<div class="bg-image"></div>
+<div class="bg-text">
+    <form action="/shop/update/<%= partMed._id %>" method="post">
+        <h2 class="manual">Update Medicine Info</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="name" value="<%= partMed.name %>" placeholder="Medicine Name">
+                </div>
+                <div class="col">
+                    <input type="text" name="company" value="<%= partMed.description.company %>" placeholder="company">
+                </div>
+                <div class="col">
+                    <input type="text" name="mg" value="<%= partMed.description.mg %>" placeholder="mg">
+                </div>
+                <div class="col">
+                    <input type="number" name="quantity" value="<%= partMed.quantity %>" placeholder="Quantity">
+                </div>
+                <div class="col">
+                    <input type="text" name="price" value="<%= partMed.price %>" placeholder="MRP per tablet">
+                </div>
+            </div>
+
+            <button>Add</button>
+        </div>
+    </form>
+</div>
+<script src="/javascript/upload.js"></script>

@@ -15,6 +15,7 @@
     <tr>
         <th scope="col">Qunatity</th>
         <th scope="col">Medicine Name</th>
+        <th scope="col"> Company - mg </th>
         <th scope="col">Shop Name</th>
         <th scope="col">Shop Address</th>
     </tr>
@@ -25,6 +26,7 @@
         <tr class="no-link" onclick="window.location='/user/viewShop/<%= med.shopId %>';">
             <th scope="row"><%= med.medicineQuantity %></th>
             <td><%= med.medicineName %></td>
+            <td> <%= med.medicineCompany %> - <%= med.medicineMg %></td>
             <td><%= med.shopName %></td>
             <td> <%= med.shopAddress %> </td>
         </tr>

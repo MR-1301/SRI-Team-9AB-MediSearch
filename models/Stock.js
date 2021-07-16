@@ -9,13 +9,19 @@ const stockSchema = new Schema({
       required: true
     },
     description: {
-      type: String,
-      required: true
+      company: {
+        type: String,
+        required: true
+      },
+      mg: {
+        type: String,
+        required: true
+      }
     },
-    quantity:{
-      type:Number,
-      required:true,
-      min:0
+    quantity: {
+      type: Number,
+      required: true,
+      min: 0
     },
     price: {
       type: String,

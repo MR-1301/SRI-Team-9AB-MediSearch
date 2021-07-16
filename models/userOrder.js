@@ -9,7 +9,7 @@ const orderSchema = new Schema({
   },
   shopID: {
     type: Schema.Types.ObjectId,
-    ref:"Shop"
+    ref: "Shop"
   },
   userID: {
     type: Schema.Types.ObjectId,
@@ -17,6 +17,10 @@ const orderSchema = new Schema({
   },
   orderInfo: [
     {
+      medID: {
+        type: Schema.Types.ObjectId,
+        require: true
+      },
       medName: {
         type: String,
         require: true,
@@ -28,6 +32,14 @@ const orderSchema = new Schema({
       medQuantity: {
         type: String,
         require: true,
+      },
+      medCompany: {
+        type: String,
+        required: true
+      },
+      medMg: {
+        type: String,
+        required: true
       }
     }
   ],

@@ -18,6 +18,8 @@
             <th scope="col">#</th>
             <th scope="col">Medicine Name</th>
             <th scope="col">Price</th>
+            <th scope="col">Company - mg</th>
+            <th scope="col"> Available</th>
             <th scope="col">Quantity</th>
             <th scope="col"> Total Price</th>
         </tr>
@@ -29,13 +31,15 @@
                 <td><%= meds[i].name %></td>
                 <% const medPriceID = `price${i + 1}` %>
                 <td id="<%= medPriceID %>"><%= meds[i].price %></td>
+                <td><%= meds[i].description.company %> - <%= meds[i].description.mg %></td>
+                <td><%= meds[i].quantity %></td>
                 <td>
                     <div class="quantity">
                         <% const plusBtn = `plus${i + 1}` %>
                         <% const minusBtn = `minus${i + 1}` %>
                         <% const inputxt = `input${i + 1}` %>
                         <button class="btn minus-btn diabled" id="<%= minusBtn %>" type="button">-</button>
-                        <input type="text" name="quantity" class="qty" value="0" id="<%= inputxt %>">
+                        <input type="number" name="quantity" min="0" max="<%=meds[i].quantity%>" class="qty" value="0" id="<%= inputxt %>">
                         <input type="hidden" name="medID" value="<%= meds[i]._id %>"/>
                         <button class="btn plus-btn" type="button" id="<%= plusBtn %>">+</button>
                     </div>

@@ -17,7 +17,7 @@
             <th>Med-Name</th>
             <th>Quantity</th>
             <th>Cost</th>
-            <th>Description</th>
+            <th>Company - mg</th>
             <th>Update/Delete</th>
         </tr>
         </thead>
@@ -30,17 +30,17 @@
                     <td><%= med.name %></td>
                     <td><%= med.quantity %></td>
                     <td><%= med.price %></td>
-                    <td><%= med.description %></td>
+                    <td><%= med.description.company %> - <%= med.description.mg %></td>
                     <td>
-                        <a href="/update" class="btn border-shadow update">
+                        <a href="/shop/update/<%= med._id %>" class="btn border-shadow update">
                             <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
 
                         </a>
-                        <a class="btn border-shadow delete">
-                            <span class="text-gradient"><i class="fas fa-trash-alt"></i></span>
-
-                        </a>
-
+                        <form action="/shop/delete/<%= med._id %>" method="post">
+                            <button class="btn border-shadow delete">
+                                <span class="text-gradient"><i class="fas fa-trash-alt"></i></span>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             <% }) %>

@@ -32,7 +32,7 @@
             <% for(var i = 0;i < orderInfo.length;i++){ %>
                 <% if(orderInfo[i].medQuantity > 0){ %>
                     <tr>
-                        <td> <%= orderInfo[i].medName %> </td>
+                        <td> <%= orderInfo[i].medName %> (<%= orderInfo[i].medCompany %> - <%= orderInfo[i].medMg %>)</td>
                         <% const quantId = `quant${i}` %>
                         <td id='<%= quantId %>'> <%= orderInfo[i].medQuantity %></td>
                         <% const costId = `cost${i}` %>

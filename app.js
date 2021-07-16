@@ -160,6 +160,7 @@ app.get('/orderDetails/:orderID', async (req, res) => {
   if (Cuser)
     nameOfUser = Cuser.name;
   const nameOfShop = CShop.name;
+  
   res.render('./orderDetails', {orderDet, nameOfUser, nameOfShop});
 });
 
@@ -205,8 +206,10 @@ app.get("/shop/stock/new", (req, res) => {
 
 app.post("/shop/stock/manual", async (req, res) => {
   //newMeds is array of new medicines
-  const {name, quantity, description, price} = req.body;
-  const newMeds = {name, quantity, description, price};
+  const {name, quantity, company, mg, price} = req.body;
+  const newMeds = {
+    name, quantity, price, description: {company, mg}
+  };
   console.log(newMeds);
   if (!req.user)
     return res.redirect('/login');
@@ -227,13 +230,15 @@ app.post("/shop/stock/manual", async (req, res) => {
   const stock = await Stock.findById(shop.stockInfo);
   let i;
   for (i = 0; i < stock.medicine.length; i++) {
-    if (stock.medicine[i].name == newMeds.name) {
+    if (stock.medicine[i].name == newMeds.name && stock.medicine[i].description.company == company && stock.medicine[i].description.mg == mg) {
       break;
     }
   }
-  if (i != stock.medicine.length)
-    stock.medicine[i].quantity += newMeds.quantity;
-  else
+  if (i != stock.medicine.length) {
+    let q1 = parseInt(stock.medicine[i].quantity);
+    let q2 = parseInt(newMeds.quantity);
+    stock.medicine[i].quantity = q1 + q2;
+  } else
     stock.medicine.push(newMeds);
   
   await stock.save();
@@ -281,7 +286,50 @@ app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   res.redirect('/shop/stock');
 });
 
-let shopCurrentOrder = [];
+app.get('/shop/update/:medID', async (req, res) => {
+  const shopC = await Shop.findById(req.user.shopInfo);
+  const stockC = await Stock.findById(shopC.stockInfo);
+  const medsInfo = stockC.medicine;
+  // console.log(medsInfo);
+  // return res.send("LOL!");
+  let partMed;
+  for (let i = 0; i < medsInfo.length; i++) {
+    if (JSON.stringify(medsInfo[i]._id) === JSON.stringify(req.params.medID)) {
+      partMed = medsInfo[i];
+      break;
+    }
+  }
+  
+  res.render('./Shop/medUpdate', {partMed});
+});
+
+app.post('/shop/update/:medID', async (req, res) => {
+  const shopC = await Shop.findById(req.user.shopInfo);
+  const currStock = await Stock.findById(shopC.stockInfo);
+  const {name, quantity, company, mg, price} = req.body;
+  const newMeds = {
+    name, quantity, price, description: {company, mg}
+  };
+  
+  for (let i = 0; i < currStock.medicine.length; i++) {
+    if (JSON.stringify(currStock.medicine[i]._id) === JSON.stringify(req.params.medID)) {
+      currStock.medicine[i] = newMeds;
+      break;
+    }
+  }
+  await currStock.save();
+  res.redirect('/shop/stock');
+});
+
+app.post('/shop/delete/:medID', async (req, res) => {
+  const shopC = await Shop.findById(req.user.shopInfo);
+  const currStock = await Stock.findById(shopC.stockInfo);
+  currStock.medicine = currStock.medicine.filter(val => JSON.stringify(val._id) != JSON.stringify(req.params.medID));
+  await currStock.save();
+  res.redirect('/shop/stock');
+});
+
+shopCurrentOrder = [];
 
 app.get('/shop/offlineOrder', async (req, res) => {
   if (!req.user)
@@ -309,9 +357,12 @@ app.post('/shop/placeOrder', async (req, res) => {
     let partMed = meds.find(obj => JSON.stringify(obj._id) === JSON.stringify(medsIds[i]));
     if (Qty[i] > 0) {
       orderInfo.push({
+        medID: partMed._id,
         medName: partMed.name,
         medPrice: partMed.price,
-        medQuantity: Qty[i]
+        medQuantity: Qty[i],
+        medCompany: partMed.description.company,
+        medMg: partMed.description.mg,
       });
     }
   }
@@ -340,6 +391,24 @@ app.get('/shop/afterOfflineOrder', async (req, res) => {
   });
   await newOrder.save();
   const printOrder = shopCurrentOrder;
+  
+  //remove from stock
+  let currShop = await Shop.findById(req.user.shopInfo);
+  let currStock = await Stock.findById(currShop.stockInfo);
+  for (let x of shopCurrentOrder) {
+    for (let i = 0; i < currStock.medicine.length; i++) {
+      if (JSON.stringify(currStock.medicine[i]._id) === JSON.stringify(x.medID)) {
+        let q1 = parseInt(currStock.medicine[i].quantity);
+        let q2 = parseInt(x.medQuantity);
+        if (q1 - q2 == 0) {
+          currStock.medicine = currStock.medicine.filter(val => JSON.stringify(val._id) != JSON.stringify(x.medID));
+        } else
+          currStock.medicine[i].quantity = q1 - q2;
+        break;
+      }
+    }
+  }
+  await currStock.save();
   shopCurrentOrder = [];
   const shopID = req.user.shopInfo;
   const currentShop = await Shop.findById(shopID);
@@ -378,7 +447,7 @@ app.post('/shop/changeStatus/:OrderID', async (req, res) => {
   await ord.save();
   const next = req.body.next;
   res.redirect(`/shop/${next}`);
-})
+});
 
 app.get('/shop/prescription', async (req, res) => {
   const prescriptions = await Prescription.find();
@@ -466,6 +535,8 @@ app.get('/user/searchMedicine', async (req, res) => {
         shopName: shop.name,
         shopAddress: shop.address,
         medicineName: particularMed.name,
+        medicineCompany: particularMed.description.company,
+        medicineMg: particularMed.description.mg,
         medicineQuantity: particularMed.quantity
       });
     }
@@ -500,9 +571,12 @@ app.post('/user/placeOrder/:ShopId', async (req, res) => {
     let partMed = meds.find(obj => JSON.stringify(obj._id) === JSON.stringify(medsIds[i]));
     if (Qty[i] > 0) {
       orderInfo.push({
+        medID: partMed._id,
         medName: partMed.name,
         medPrice: partMed.price,
-        medQuantity: Qty[i]
+        medQuantity: Qty[i],
+        medCompany: partMed.description.company,
+        medMg: partMed.description.mg
       });
     }
   }
@@ -545,6 +619,25 @@ app.post("/user/afterPlacingOrder/:ShopID", async (req, res) => {
   await newOrder.save();
   const orderInfo = currentOrder;
   const customerName = req.user.name;
+  
+  //remove from stock
+  let currShop = await Shop.findById(req.params.ShopID);
+  let currStock = await Stock.findById(currShop.stockInfo);
+  for (let x of currentOrder) {
+    for (let i = 0; i < currStock.medicine.length; i++) {
+      if (JSON.stringify(currStock.medicine[i]._id) === JSON.stringify(x.medID)) {
+        let q1 = parseInt(currStock.medicine[i].quantity);
+        let q2 = parseInt(x.medQuantity);
+        if (q1 - q2 == 0) {
+          currStock.medicine = currStock.medicine.filter(val => JSON.stringify(val._id) != JSON.stringify(x.medID));
+        } else
+          currStock.medicine[i].quantity = q1 - q2;
+        break;
+      }
+    }
+  }
+  await currStock.save();
+  
   currentOrder = [];
   const currentShop = await Shop.findById(req.params.ShopID);
   const shopName = currentShop.name;
