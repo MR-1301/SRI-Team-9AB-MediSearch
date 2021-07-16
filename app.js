@@ -251,7 +251,7 @@ app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   let newMeds = []
   for (let i = 0; i < newMeds1[0].length; i++) {
     let obj = {
-      name: newMeds1[0][i].name,
+      name: newMeds1[0][i].medicine,
       description: {
         company: newMeds1[0][i].company,
         mg: newMeds1[0][i].mg
@@ -285,7 +285,7 @@ app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   for (let x of newMeds) {
     let i;
     for (i = 0; i < stock.medicine.length; i++) {
-      if (stock.medicine[i].name == x.name) {
+      if (stock.medicine[i].name == x.name && stock.medicine[i].description.company==x.description.company && stock.medicine[i].description.mg==x.description.mg) {
         break;
       }
     }
