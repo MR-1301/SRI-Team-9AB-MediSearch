@@ -285,7 +285,7 @@ app.post('/shop/stock/excel', uploadEx.single("upload"), async (req, res) => {
   for (let x of newMeds) {
     let i;
     for (i = 0; i < stock.medicine.length; i++) {
-      if (stock.medicine[i].name == x.name && stock.medicine[i].description.company==x.description.company && stock.medicine[i].description.mg==x.description.mg) {
+      if (stock.medicine[i].name == x.name && stock.medicine[i].description.company == x.description.company && stock.medicine[i].description.mg == x.description.mg) {
         break;
       }
     }
@@ -543,6 +543,8 @@ app.get('/user/searchMedicine', async (req, res) => {
   
   for (let shop of allShops) {
     const stockInShop = await Stock.findById(shop.stockInfo);
+    if (!stockInShop)
+      continue;
     const medsInShop = stockInShop.medicine;
     for (let particularMed of medsInShop) {
       allMedicines.push({
