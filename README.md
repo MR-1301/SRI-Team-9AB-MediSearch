@@ -40,7 +40,7 @@ Go to http://localhost:4000
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`DBURI=#your DBURI here`
+`DBURI=#your Database URI here`
 
 `GOOGLE_CLIENT_ID=#your google clientId here`
 
@@ -48,7 +48,11 @@ To run this project, you will need to add the following environment variables to
 
 `SECRET=#your session secret here`
 
+`CLOUDINARY_CLOUD_NAME=#your Cloudinary Cloud Name`
 
+`CLOUDINARY_KEY=#your Cloudinary Key`
+
+`CLOUDINARY_SECRET=#your Cloudinary Secret`
 
 ## Tech Stack
 
